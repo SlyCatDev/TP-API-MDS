@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.6.0/css/fontawesome.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <%- include('partials/header') %>
+
+    <% if (login) { %>
+        <p>Bienvenue, <%= login %> !</p>
+    <% } else { %>
+    <% } %>
+
+    <h1><%= message %></h1>
+
+    <!-- Formulaire pour saisir le montant et la devise -->
+    <form id="dab-form">
+        <label for="montant">Montant :</label>
+        <input type="number" id="montant" name="montant" placeholder="Ex: 125" required>
+        
+        <label for="devise">Devise :</label>
+        <select id="devise" name="devise">
+            <option value="€">€ (Euro)</option>
+            <option value="$">$ (Dollar)</option>
+            <option value="£">£ (Livre Sterling)</option>
+        </select>
+        
+        <button type="submit">Trouver la plus petite coupure</button>
+    </form>
+
+    <div id="result"></div>
+
+    <a href="/">Retour à l'accueil</a>
+
+    <%- include('partials/footer') %>
+
+    <script>
+        const form = document.getElementById('dab-form');
+        const resultDiv = document.getElementById('result');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Empêche le rechargement de la page
+
+            const montant = document.getElementById('montant').value;
+            const devise = document.getElementById('devise').value;
+
+            // Requête à l'API
+            try {
+                const response = await fetch(`/dab/smallest/${montant}/${devise}`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    resultDiv.innerHTML = `<h3>Résultat :</h3><p>La plus petite coupure est : ${data.smallest}</p>`;
+                } else {
+                    resultDiv.innerHTML = `<h3>Erreur :</h3><p>${data.error || "Une erreur inattendue est survenue."}</p>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<h3>Erreur :</h3><p>Impossible de contacter l'API.</p>`;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.6.0/css/fontawesome.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <%- include ('partials/header') %>
+    <% if (login) { %>
+        <p>Bienvenue, <%= login %> !</p>
+    <% } else { %>
+    <% } %>
+
+<main>
+    <h1><%= message %></h1>
+    <p>Découvre quel jour et quelle heure est-il en temps réel !</p>
+    <a href="/download" class="btn">Télécharger la date et l'heure</a><br>
+    <img src="/images/26093.svg" alt="horloge-img" width="200px">
+</main>
+
+    <%- include ('partials/footer') %>
+</body>
+</html>

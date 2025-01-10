@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.6.0/css/fontawesome.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <%- include ('partials/header') %>
+    
+<main>
+    <h1>Connexion</h1>
+
+    <form action="/login" method="POST">
+        <label for="username">Nom d'utilisateur</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="password">Mot de passe</label>
+        <input type="password" id="password" name="password" required>
+        
+        <button type="submit">
+            <i class="fa fa-lock"></i> Connexion
+        </button>
+    </form>
+    <% if (error) { %>
+        <p style="color: red;"><%= error %></p>
+    <% } %>
+</main>
+
+    <a href="/">Retour à l'accueil</a>
+
+    <%- include ('partials/footer') %>
+</body>
+</html>

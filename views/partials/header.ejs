@@ -1,0 +1,28 @@
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.6.0/css/fontawesome.min.css">
+<header class="main-header">
+    <div class="container"> 
+        <h1><a href="/">Serveur Express DAB</a></h1>
+    <!--<h2>Appli Express</h2>-->
+        <nav class="nav-container">
+            <ul class="nav-list">
+                <li><a href="/">Accueil</a></li>
+                <li><a href="/dab">DAB</a></li>
+                <li><a href="/chat">Chat</a></li>
+                <li><a href="/about">À propos</a></li>
+                <li><a href="/contact">Contact</a></li>
+                <li><a href="/404">Page Erreur</a></li>
+                
+
+                <% if (login) { %>
+                    <li><a href="/admin">Admin</a></li>
+                    <div class="header-container">
+                    <li><a href="/logout" class="btn-logout">Se déconnecter</a></li>
+                <% } else { %>
+                    <li><a href="/login" class="btn-login">S'identifier</a></li>
+                <% } %>
+                    </div>
+            </ul>
+        </nav>
+    </div>
+</header>
