@@ -7,7 +7,7 @@ import chatRoutes from './routes/chatRoutes.js';
 import { Server } from 'socket.io';
 // import Utilisateur from './models/utilisateur.js';
 import bodyParser from 'body-parser';
-import sequelize from './config/sequelize.js';
+//import sequelize from './config/sequelize.js';
 
 
 const app = express();
@@ -17,7 +17,7 @@ const server = createServer(app);
 const io = new Server(server);
 
 // Fonction pour synchroniser la base de données
-async function synchronizeDatabase() {
+/*async function synchronizeDatabase() {
     try {
       await sequelize.authenticate();
       console.log('Connexion à la base de données réussie.');
@@ -28,6 +28,7 @@ async function synchronizeDatabase() {
       console.error('Erreur lors de la synchronisation de la base de données :', err);
     }
   }
+    */
 
 // Middleware bodyParser
 app.use(bodyParser.json());
@@ -59,7 +60,7 @@ app.use((req, res, next) => {
 // Gestion du chat socket.io
 //app.use("/socketio/", tchatSocketio(httpServer));
 
-synchronizeDatabase();
+//synchronizeDatabase();
 
 // Utilisation des routes
 app.use('/', routes);

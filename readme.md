@@ -1,4 +1,4 @@
-# Serveur express distributeur de billet
+# Serveur express/NodeJs - TP API
 
 ## Description
 Ce projet est une application web construite avec Node.js, Express et EJS. Il comprend une page d'accueil, une page de connexion, une page à propos, une page contact avec un formulaire simple et une gestion d'erreurs personnalisée, tout en utilisant un design responsive et ergonomique.
