@@ -1,0 +1,224 @@
+Documentation technique pour le projet
+
+JSON Web Token (JWT)
+
+Qu'est-ce que le JWT ?
+
+Un JSON Web Token (JWT) est un standard ouvert (RFC 7519) pour transmettre des informations de manière sécurisée sous forme d'objet JSON entre deux parties (client et serveur). Les informations contenues dans un JWT sont signées, ce qui garantit leur intégrité et leur authenticité.
+
+Structure d'un JWT
+
+Un JWT est composé de trois parties, séparées par des points (.) :
+
+Header : Contient des informations sur le type de token (JWT) et l'algorithme de signature (par exemple, HMAC SHA256).
+
+Payload : Contient les données ou "claims" (par exemple, l'identifiant de l'utilisateur, la date d'expiration, etc.).
+
+Signature : Permet de vérifier l'intégrité des données en utilisant une clé secrète ou un certificat public/privé.
+
+Exemple d'un JWT :
+
+``bash
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEyMywiZXhwIjoxNjYwODg3MjAwfQ.S3pbcT_sEBfZyZHGv5VlLRM5OONjKzhG8fJUEXFrBvo``
+
+Fonctionnement
+
+Lors de l'authentification, le serveur génère un JWT signé et le retourne au client.
+
+Le client stocke le JWT (par exemple, dans le stockage local ou un cookie).
+
+Pour chaque requête nécessitant une authentification, le client envoie le JWT dans l'en-tête HTTP Authorization (format : Bearer <token>).
+
+Le serveur vérifie la signature du JWT pour valider l'utilisateur.
+
+Avantages
+
+Stateless : Le serveur n'a pas besoin de stocker l'état de session.
+
+Compact : Le JWT est compact et facilement transmissible via HTTP.
+
+Sûr : La signature empêche toute falsification.
+
+Inconvénients
+
+Expiration : Si un JWT est compromis, il reste valide jusqu'à son expiration.
+
+Pas révoqué facilement : Une fois émis, un JWT ne peut pas être invalidé sans mécanismes additionnels.
+
+
+REST (Representational State Transfer)
+
+Qu'est-ce que le REST ?
+
+REST est une architecture pour construire des services web. Elle repose sur des principes simples pour l'interaction entre client et serveur à travers le protocole HTTP.
+
+Principes fondamentaux
+
+Stateless : Chaque requête du client doit contenir toutes les informations nécessaires ; le serveur ne conserve pas l'état des sessions.
+
+Uniformité : Utilisation des méthodes HTTP standard :
+
+GET : Récupérer des ressources.
+
+POST : Créer une nouvelle ressource.
+
+PUT : Mettre à jour une ressource existante.
+
+DELETE : Supprimer une ressource.
+
+Resources : Les ressources (objets, données) sont identifiées par des URLs.
+
+Représentations : Les ressources peuvent être représentées dans différents formats (JSON, XML, etc.).
+
+Exemple
+
+URL : https://example.com/api/users
+
+GET : Récupérer tous les utilisateurs.
+
+POST : Ajouter un nouvel utilisateur.
+
+URL : https://example.com/api/users/123
+
+GET : Récupérer l'utilisateur avec l'ID 123.
+
+PUT : Mettre à jour l'utilisateur avec l'ID 123.
+
+DELETE : Supprimer l'utilisateur avec l'ID 123.
+
+Avantages
+
+Simple et bien supporté.
+
+Structure claire des endpoints.
+
+
+Modèle de maturité de Richardson
+
+Le modèle de maturité de Richardson est une manière d'évaluer le niveau de conformité d'une API avec les principes REST. Il comporte 4 niveaux :
+
+Niveau 0 : Endpoints uniques
+
+Une seule URL pour toutes les actions.
+
+Exemple : /api avec une méthode POST contenant une action et des données.
+
+Niveau 1 : Ressources individuelles
+
+Introduction de plusieurs endpoints pour chaque ressource.
+
+Exemple : /users, /orders.
+
+Niveau 2 : Utilisation des méthodes HTTP
+
+Exploitation des méthodes HTTP standard (GET, POST, etc.).
+
+Niveau 3 : Hypermedia (HATEOAS)
+
+Les réponses incluent des liens vers d'autres actions ou ressources.
+
+Exemple :
+
+``bash
+{
+  "user": {
+    "id": 123,
+    "name": "John",
+    "links": [
+      { "rel": "self", "href": "/users/123" },
+      { "rel": "orders", "href": "/users/123/orders" }
+    ]
+  }
+}``
+
+Implémentation
+
+Pour atteindre le niveau 3 :
+
+Inclure des liens dans les réponses JSON pour guider le client.
+
+Exemple avec Express :
+
+``bash
+res.json({
+  user: {
+    id: 123,
+    name: 'John',
+    links: [
+      { rel: 'self', href: `/users/123` },
+      { rel: 'orders', href: `/users/123/orders` },
+    ]
+  }
+});``
+
+Websockets et Socket.IO
+
+Qu'est-ce que les Websockets ?
+
+Les Websockets sont un protocole permettant une communication bidirectionnelle en temps réel entre un client et un serveur sur une seule connexion TCP.
+
+Fonctionnement
+
+Le client envoie une requête pour ouvrir une connexion Websocket.
+
+Le serveur accepte et maintient une connexion ouverte.
+
+Les messages peuvent être échangés dans les deux sens, sans besoin de requêtes supplémentaires.
+
+Cas d'utilisation
+
+Chats en temps réel.
+
+Notifications push.
+
+Jeux multijoueurs.
+
+Limites
+
+Moins adapté aux cas où les connexions doivent être très légères.
+
+Qu'est-ce que Socket.IO ?
+
+Socket.IO est une bibliothèque basée sur Websockets, mais ajoute des fonctionnalités :
+
+Gestion des connexions instables (fallback vers HTTP long-polling).
+
+Room/channels pour organiser les messages.
+
+Gestion simplifiée des événements.
+
+Exemple avec Socket.IO
+
+Côté serveur (Node.js) :
+
+``bash
+const io = require('socket.io')(server);
+
+io.on('connection', (socket) => {
+  console.log('Un utilisateur s'est connecté.');
+
+  socket.on('message', (msg) => {
+    console.log('Message reçu :', msg);
+    io.emit('message', msg); // Broadcast à tous les clients
+  });
+
+  socket.on('disconnect', () => {
+    console.log('Un utilisateur s'est déconnecté.');
+  });
+});``
+
+Côté client :
+
+``bash
+const socket = io();
+
+socket.on('message', (msg) => {
+  console.log('Message reçu :', msg);
+});
+
+document.querySelector('form').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const input = document.getElementById('messageInput');
+  socket.emit('message', input.value);
+  input.value = '';
+});``
