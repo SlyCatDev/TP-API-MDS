@@ -6,7 +6,7 @@ const sequelize = new Sequelize('boutique_info','api_admin','admin',{
     port: 1433,
   dialectOptions: {
     options: {
-      trustServerCertificate: true, // Nécessaire si vous utilisez des certificats locaux non validés
+      trustServerCertificate: true,
     },
   },
 });

@@ -21,28 +21,103 @@
     <script src="/socket.io/socket.io.js"></script>
 <script>
   const socket = io();
+  let username = '';
+
+  // Demander le pseudo au chargement de la page
+  while (!username.trim()) {
+    username = prompt('Veuillez entrer votre pseudo :');
+  }
 
   const form = document.getElementById('messageForm');
   const input = document.getElementById('messageInput');
   const messages = document.getElementById('messages');
 
+  // Envoyer l'événement de connexion avec le pseudo
+  socket.emit('user connected', username);
+
+  // Recevoir l'historique des messages
+  socket.on('message history', (history) => {
+    history.forEach(msg => {
+      const item = document.createElement('li');
+      item.className = 'message-item';
+      
+      const usernameSpan = document.createElement('span');
+      usernameSpan.className = msg.username === username ? 'username current-user' : 'username';
+      usernameSpan.textContent = msg.username;
+
+      const messageSpan = document.createElement('span');
+      messageSpan.className = 'message-text';
+      messageSpan.textContent = `: ${msg.text}`;
+
+      const timeSpan = document.createElement('span');
+      timeSpan.className = 'message-time';
+      timeSpan.textContent = msg.time;
+
+      item.appendChild(usernameSpan);
+      item.appendChild(messageSpan);
+      item.appendChild(timeSpan);
+      
+      messages.appendChild(item);
+    });
+    window.scrollTo(0, document.body.scrollHeight);
+  });
+
+  // Écouter les événements de connexion et déconnexion
+  socket.on('user connected', (msg) => {
+    const item = document.createElement('li');
+    item.textContent = msg;
+    item.classList.add('connection-message');
+    messages.appendChild(item);
+  });
+
+  socket.on('user disconnected', (msg) => {
+    const item = document.createElement('li');
+    item.textContent = msg;
+    item.classList.add('disconnection-message');
+    messages.appendChild(item);
+  });
+
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     if (input.value) {
-      socket.emit('message',{text: input.value});
+      socket.emit('message', {
+        text: input.value,
+        username: username
+      });
       input.value = '';
     }
   });
 
   socket.on('message', (msg) => {
     const item = document.createElement('li');
-    item.textContent = msg.contenu;
+    item.className = 'message-item';
+    
+    if (msg.username) {
+      const usernameSpan = document.createElement('span');
+      usernameSpan.className = msg.username === username ? 'username current-user' : 'username';
+      usernameSpan.textContent = msg.username;
+
+      const messageSpan = document.createElement('span');
+      messageSpan.className = 'message-text';
+      messageSpan.textContent = `: ${msg.text}`;
+
+      const timeSpan = document.createElement('span');
+      timeSpan.className = 'message-time';
+      timeSpan.textContent = msg.time;
+
+      item.appendChild(usernameSpan);
+      item.appendChild(messageSpan);
+      item.appendChild(timeSpan);
+    } else {
+      item.textContent = msg.text;
+    }
+    
     messages.appendChild(item);
     window.scrollTo(0, document.body.scrollHeight);
   });
 
   socket.on('disconnect', (msg) => {
-    alert(msg.message)
+    alert(msg.message);
   });
 </script>
 </body>
