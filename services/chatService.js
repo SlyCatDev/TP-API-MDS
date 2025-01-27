@@ -1,23 +1,32 @@
-// Tableau pour stocker l'historique des messages
-const messageHistory = [];
-
 // Liste des gros mots à filtrer
 const grossieretes = ['merde', 'putain', 'connard', 'pute', 'fuck', 'bite', 'couille', 'enculé', 'salope'];
 
+// Ajout de la déclaration de messageHistory
+let messageHistory = [];
+
 // Fonction pour filtrer les gros mots
 function filtrerMessage(message) {
-    let messageFiltré = message.toLowerCase();
+    const MAX_LENGTH = 500;
+    if (message.length > MAX_LENGTH) {
+        message = message.substring(0, MAX_LENGTH) + '...';
+    }
+
+    let filtreMessage = message.toLowerCase();
     grossieretes.forEach(mot => {
-        const regex = new RegExp(mot, 'gi');
-        messageFiltré = messageFiltré.replace(regex, '***');
+        const regex = new RegExp(`\\b${mot}\\b`, 'gi');
+        filtreMessage = filtreMessage.replace(regex, '***');
     });
-    return messageFiltré;
+    return filtreMessage;
 }
 
 export function initializeChat(io) {
     io.on('connection', (socket) => {
         let username = '';
 
+        // Rejoindre une room
+        socket.on("joinRoom", (roomName) => {
+        socket.join(roomName); // Ajoute l'utilisateur à la room spécifiée
+    
         socket.on('user connected', (pseudo) => {
             username = pseudo;
             socket.emit('message history', messageHistory);
@@ -53,17 +62,5 @@ export function initializeChat(io) {
             }
         });
     });
+});
 }
-
-/* function sendMsg(options) {
-    const options = 
-
-    const msg = {
-        time: new Date().toJSON(),
-        message : 
-
-}
-
-
-}
-*/
