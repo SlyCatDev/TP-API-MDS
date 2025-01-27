@@ -2,12 +2,39 @@ import { Router } from 'express';
 
 const router = Router();
 
-// Route pour afficher la page de chat
+/**
+ * @swagger
+ * tags:
+ *   name: Chat
+ *   description: Gestion des fonctionnalités de chat
+ */
+
+/**
+ * @swagger
+ * /chat:
+ *   get:
+ *     summary: Afficher la page du chat
+ *     tags: [Chat]
+ *     responses:
+ *       200:
+ *         description: Page du chat rendue avec succès
+ *         content:
+ *           text/html:
+ *             schema:
+ *               type: string
+ *       500:
+ *         description: Erreur serveur
+ */
 router.get('/chat', (req, res) => {
+  try {
     res.render('chat', { 
-        title: 'Chat', 
-        message: 'Chat en direct' 
+      title: 'Chat', 
+      message: 'Chat en direct' 
     });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Erreur serveur');
+  }
 });
 
 export default router;
