@@ -1,0 +1,22 @@
+components:
+  schemas:
+    Utilisateur:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID de l'utilisateur
+        nom:
+          type: string
+          description: Nom de l'utilisateur
+        email:
+          type: string
+          description: Email de l'utilisateur
+        createdAt:
+          type: string
+          format: date-time
+          description: Date de création
+        updatedAt:
+          type: string
+          format: date-time
+          description: Date de mise à jour
