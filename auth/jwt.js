@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken';
-// import 'dotenv/config'
+import dotenv from 'dotenv';
 
 // Charger les variables d'environnement
-// dotenv.config();
+dotenv.config();
 
 // Utiliser la clé depuis les variables d'environnement
 //const JWT_SECRET = process.env.JWT_SECRET;
