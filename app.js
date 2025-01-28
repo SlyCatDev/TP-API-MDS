@@ -9,12 +9,18 @@ import { initializeChat } from './services/chatService.js';
 import bodyParser from 'body-parser';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
-// import { synchronizeDatabase } from './config/sequelize.js';
-// import sequelize from './config/sequelize.js';
+import sequelize from './config/sequelize.js';
+
+// Synchronisation de la base de données avec Sequelize
+sequelize.authenticate()
+  .then(() => console.info("Base de données synchronisée avec Sequelize"))
+  .catch((error) =>
+    console.error("Erreur de synchronisation de la base de données:", error),
+  );
 
 
 const app = express();
-const PORT = 8080;
+const PORT = 3000;
 
 const server = createServer(app);
 const io = new Server(server);
@@ -26,11 +32,12 @@ const swaggerOptions = {
       info: {
         title: 'Documentation API',
         version: '1.0.0',
-        description: 'Une API simple avec Express et Swagger',
+        description: 'Une API REST avec Express et Swagger',
       },
       servers: [
         {
           url: 'http://localhost:3000',
+          description: 'serveur de developpement',
         },
       ],
     },
