@@ -1,32 +1,29 @@
-import { verifyToken } from '../auth/jwt.js';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+import { JWT_SECRET } from '../auth/jwt.js';
 
+// Charger les variables d'environnement
+dotenv.config();
+
+// Vérifier que la clé secrète existe
+if (!JWT_SECRET) {
+    throw new Error('JWT_SECRET doit être défini dans les variables d\'environnement');
+}
+
+// Middleware pour vérifier le token JWT
 export function authenticateJWT(req, res, next) {
-    try {
-        const authHeader = req.headers.authorization;
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
-            return res.status(401).json({ 
-                error: 'Header d\'autorisation manquant' 
-            });
-        }
+    const token = req.header('x-auth-token');
 
-        const token = authHeader.split(' ')[1];
-        const user = verifyToken(token);
-        req.user = user;
+    if (!token) {
+        return res.status(401).json({ message: 'Token manquant, authorization denied' });
+      }
+    
+      try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        req.user = decoded.user;
         next();
-    } catch (err) {
-        return res.status(403).json({ 
-            error: err.message || 'Token invalide' 
-        });
-    }
-}
-
-export function requireRole(role) {
-    return (req, res, next) => {
-        if (!req.user || req.user.role !== role) {
-            return res.status(403).json({ 
-                error: 'Accès non autorisé' 
-            });
-        }
-        next();
+      } catch (err) {
+        res.status(401).json({ message: 'Token invalide'});
+      }
     };
-}
+
