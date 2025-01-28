@@ -14,7 +14,7 @@ import swaggerJsdoc from 'swagger-jsdoc';
 
 
 const app = express();
-const PORT = 3000;
+const PORT = 8080;
 
 const server = createServer(app);
 const io = new Server(server);
