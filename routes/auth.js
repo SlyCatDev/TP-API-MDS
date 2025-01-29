@@ -1,11 +1,14 @@
 import bcrypt from 'bcrypt';
 import { User } from '../models/user';
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
+// import dotenv from 'dotenv';
 
-dotenv.config();
+/* dotenv.config();
+
+const router = Router();
 
 const SECRET_KEY = process.env.JWT_SECRET;
+*/
 
 /**
  * @swagger

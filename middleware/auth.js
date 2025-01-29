@@ -1,14 +1,14 @@
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
-import { JWT_SECRET } from '../auth/jwt.js';
+//import dotenv from 'dotenv';
+//import { JWT_SECRET } from '../auth/jwt.js';
 
 // Charger les variables d'environnement
-dotenv.config();
+// dotenv.config();
 
 // Vérifier que la clé secrète existe
-if (!JWT_SECRET) {
-    throw new Error('JWT_SECRET doit être défini dans les variables d\'environnement');
-}
+// if (!JWT_SECRET) {
+   // throw new Error('JWT_SECRET doit être défini dans les variables d\'environnement');
+//}
 
 // Middleware pour vérifier le token JWT
 export function authenticateJWT(req, res, next) {
@@ -19,11 +19,12 @@ export function authenticateJWT(req, res, next) {
       }
     
       try {
-        const decoded = jwt.verify(token, JWT_SECRET);
+        const decoded = jwt.verify(token, 'Mys3cr3tK3Y');
         req.user = decoded.user;
         next();
       } catch (err) {
         res.status(401).json({ message: 'Token invalide'});
       }
     };
+
 
