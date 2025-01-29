@@ -2,8 +2,8 @@ import { Router } from 'express';
 import fs from 'node:fs';
 import path from 'path';
 import { fileURLToPath } from 'node:url';
-import { generateToken } from '../auth/jwt.js';
-import { authenticateJWT, requireRole } from '../middleware/auth.js';
+// import { generateToken } from '../auth/jwt.js';
+// import { authenticateJWT, requireRole } from '../middleware/auth.js';
 
 const router = Router();
 
@@ -96,12 +96,13 @@ router.get('/login', (req, res) => {
  *       500:
  *         description: Erreur serveur
  */
-router.get('/admin', authenticateJWT, requireRole('admin'), (req, res) => {
+/* router.get('/admin', authenticateJWT, requireRole('admin'), (req, res) => {
   res.render('admin', {
     title: 'Admin',
     user: req.user,
   });
 });
+*/
 
 /**
  * @swagger
