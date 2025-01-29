@@ -1,3 +1,5 @@
+import { determineCoupureGeneric } from 'api_sylvain';
+
 // Liste des gros mots à filtrer
 const grossieretes = ['merde', 'putain', 'connard', 'pute', 'fuck', 'bite', 'couille', 'enculé', 'salope'];
 
@@ -22,13 +24,8 @@ function filtrerMessage(message) {
 export function initializeChat(io) {
     io.on('connection', (socket) => {
         let username = '';
-
-        // Rejoindre une room
-        socket.on("joinRoom", (roomName) => {
-        socket.join(roomName); // Ajoute l'utilisateur à la room spécifiée
     
-        socket.on('user connected', (pseudo) => {
-            username = pseudo;
+        socket.on('user connected', (username) => {
             socket.emit('message history', messageHistory);
             io.emit('user connected', `${username} vient de se connecter au chat`);
             console.log(`${username} s'est connecté`);
@@ -61,6 +58,5 @@ export function initializeChat(io) {
                 console.log(`${username} s'est déconnecté`);
             }
         });
-    });
 });
 }
