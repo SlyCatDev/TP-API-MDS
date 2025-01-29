@@ -23,7 +23,9 @@ const app = express();
 const PORT = 3000;
 
 const server = createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+  connectionStateRecovery: {}
+});
 
 // Configuration de swagger-jsdoc
 const swaggerOptions = {
@@ -88,7 +90,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use((req, res) => {
     res.status(404).render('404', { title: 'Erreur 404' });
 });
-
 
 // Démarrage du serveur
 server.listen(PORT, () => {
