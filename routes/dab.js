@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import determineCoupureGeneric from 'api_sylvain';
+import { determineCoupureGeneric } from 'api_sylvain';
 
 const router = Router();
 
