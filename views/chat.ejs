@@ -11,59 +11,31 @@
     <%- include('partials/header') %>
         
     <main>
-      <!--<form id="roomForm">
-        <label for="roomSelect">Choisissez une room :</label>
-        <select id="roomSelect" required>
-          <option value="room1">Room 1</option>
-          <option value="room2">Room 2</option>
-        </select>
-        <button type="submit">Rejoindre</button>
-      </form>
-      
-
-      <div id="currentRoom">Room actuelle : <span id="currentRoomName"></span></div>
--->
         <ul id="messages"></ul>
             <form id="messageForm" action="">
-                <input id="messageInput" type="text" autocomplete="off" />
+                <input id="messageInput" type="text" autocomplete="off" placeholder="Écrivez votre message ou #dab montant"/>
                 <button type="submit">Envoyer</button>
+                <button id="toggle-btn">Disconnect</button>
         </form>
     </main>
 
     <script src="/socket.io/socket.io.js"></script>
 <script>
-  // Connexion au serveur socket
   const socket = io();
+
   let username = '';
-  // let currentroom = 'room1';
 
   // Demander le pseudo au chargement de la page
   while (!username.trim()) {
     username = prompt('Veuillez entrer votre pseudo :');
   }
-
-  // const roomSelect = document.getElementById('roomSelect');
-  // const currentRoomName = document.getElementById('currentRoomName');
   const form = document.getElementById('messageForm');
   const input = document.getElementById('messageInput');
   const messages = document.getElementById('messages');
-
-  // Afficher la room actuelle au démarrage
-  //currentRoomName.textContent = currentRoom;
+  const toggleButton = document.getElementById('toggle-btn');
 
   // Envoyer l'événement de connexion avec le pseudo
   socket.emit('user connected', username);
-
-  /* document.getElementById('roomForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const newRoom = roomSelect.value;
-    socket.emit('leave room', { username, room: currentRoom });
-    currentRoom = newRoom;
-    currentRoomName.textContent = currentRoom;
-    socket.emit('user connected', username, currentRoom);
-    messages.innerHTML = '';
-  });
-  */
 
   // Recevoir l'historique des messages
   socket.on('message history', (history) => {
@@ -118,21 +90,33 @@
     }
   });
 
+  
+  toggleButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (socket.connected) {
+      toggleButton.innerText = 'Connect';
+      socket.disconnect();
+    } else {
+      toggleButton.innerText = 'Disconnect';
+      socket.connect();
+    }
+  });
+
   // Ajouter un message à la liste
   function appendMessage(msg) {
-    const li = document.createElement('li');
-    li.textContent = `${msg.time} - ${msg.username}: ${msg.text}`;
-    messages.appendChild(li);
-    messages.scrollTop = messages.scrollHeight;
+    const item = document.createElement('li');
+    item.textContent = `${msg.username}: ${msg.text}`;
+    messages.appendChild(item);
+    window.scrollTo(0, document.body.scrollHeight);
     }
 
   // Ajouter un message système (connexion/déconnexion)
   function appendSystemMessage(msg, type) {
-    const li = document.createElement('li');
-    li.textContent = msg;
-    li.classList.add('system-message', type);
-    messages.appendChild(li);
-    messages.scrollTop = messages.scrollHeight;
+    const item = document.createElement('li');
+    item.textContent = msg;
+    item.classList.add('system-message', type);
+    messages.appendChild(item);
+    window.scrollTo(0, document.body.scrollHeight);
     }
 </script>
 </body>
