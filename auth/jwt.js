@@ -1,12 +1,8 @@
 import jwt from 'jsonwebtoken';
-// import dotenv from 'dotenv';
+import dotenv from 'dotenv';
 
 // Charger les variables d'environnement
-//dotenv.config();
-
-// Utiliser la clé depuis les variables d'environnement
-// export const JWT_SECRET = 'Mys3cr3tK3Y';
-
+dotenv.config();
 
 // Vérifier que la clé secrète existe
 /*if (!JWT_SECRET) {
@@ -19,7 +15,7 @@ export function generateToken(payload, expiresIn = '1h') {
         throw new Error('Payload invalide');
     }
 
-    return jwt.sign(payload, SECRET_KEY, {
+    return jwt.sign(payload, process.env.JWT_SECRET, {
         expiresIn,
         algorithm: 'HS256'
     });
@@ -31,7 +27,7 @@ export function verifyToken(token) {
     }
 
     try {
-        return jwt.verify(token, SECRET_KEY, {
+        return jwt.verify(token, JWT_SECRET, {
             algorithms: ['HS256']
         });
     } catch (error) {
