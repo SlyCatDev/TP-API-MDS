@@ -7,7 +7,7 @@ import dabRoutes from './routes/dab.js';
 import chatRoutes from './routes/chatRoutes.js';
 import { initializeChat } from './services/chatService.js';
 import bodyParser from 'body-parser';
-import swaggerUi from 'swagger-ui-express';
+// import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import sequelize from './config/sequelize.js';
 
@@ -94,7 +94,7 @@ app.use('/chat', chatRoutes);
 app.use('/users', userRoutes);
 
 // Route pour Swagger
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Gestion des routes inexistantes (404)
 app.use((req, res) => {
