@@ -11,6 +11,8 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import sequelize from './config/sequelize.js';
 
+import userRoutes from './routes/userRoutes.js';
+
 
 // Synchronisation de la base de données avec Sequelize
 sequelize.authenticate()
@@ -89,6 +91,8 @@ app.use('/', routes);
 app.use('/dab', dabRoutes);
 app.use('/chat', chatRoutes);
 
+app.use('/users', userRoutes);
+
 // Route pour Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
@@ -101,8 +105,3 @@ app.use((req, res) => {
 server.listen(PORT, () => {
     console.log(`Serveur démarré sur http://localhost:${PORT}`);
 });
-
-// Routes
-import userRoutes from './routes/userRoutes.js';
-
-app.use('/users', userRoutes);
