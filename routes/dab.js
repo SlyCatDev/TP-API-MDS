@@ -20,7 +20,7 @@ const router = Router();
 router.get('/', (req, res) => {
   res.render('dab', {
     title: 'Distributeur de Billets (DAB)',
-    message: 'Entrez un montant :',
+    message: 'Distributeur de billets automatique',
     //login: null, // gérer un utilisateur connecté
   });
 });
