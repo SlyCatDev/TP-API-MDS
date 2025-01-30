@@ -54,7 +54,7 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    resultDiv.innerHTML = `<h3>Résultat :</h3><p>La plus petite coupure est : ${data.smallest}</p>`;
+                    resultDiv.innerHTML = `<h3>Résultat :</h3><p>Voici vos coupures : ${data.smallest}</p>`;
                 } else {
                     resultDiv.innerHTML = `<h3>Erreur :</h3><p>${data.error || "Une erreur inattendue est survenue."}</p>`;
                 }
