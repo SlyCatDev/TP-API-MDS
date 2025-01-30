@@ -11,16 +11,21 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import sequelize from './config/sequelize.js';
 
+
 // Synchronisation de la base de données avec Sequelize
 sequelize.authenticate()
-  .then(() => console.info("Base de données synchronisée avec Sequelize"))
+  .then(() => {
+    console.info("Base de données connectée avec Sequelize");
+    // return sequelize.sync(); // Synchronise les modèles
+  })
+  .then(() => console.info("Modèles synchronisés avec la base de données"))
   .catch((error) =>
-    console.error("Erreur de synchronisation de la base de données:", error),
+    console.error("Erreur de connexion à la base de données:", error)
   );
 
 
 const app = express();
-const PORT = 8080;
+const PORT = 3000;
 
 const server = createServer(app);
 const io = new Server(server, {
@@ -38,7 +43,7 @@ const swaggerOptions = {
       },
       servers: [
         {
-          url: 'http://localhost:8080',
+          url: 'http://localhost:3000',
           description: 'serveur de developpement',
         },
       ],
@@ -61,7 +66,7 @@ app.use(session({
     secret: 'secretKey', // Clé secrète pour signer les sessions
     resave: false,       // Ne pas sauvegarder la session si elle n'a pas été modifiée
     saveUninitialized: true, // Sauvegarder les sessions non initialisées
-    cookie: { secure: false } // false si pas en HTTPS
+    cookie: { secure: process.env.NODE_ENV === 'production' } // Cookie sécurisé en production
 }));
 
 // Middleware pour servir les fichiers statiques
@@ -82,7 +87,8 @@ app.use((req, res, next) => {
 // Utilisation des routes
 app.use('/', routes);
 app.use('/dab', dabRoutes);
-app.use(chatRoutes);
+app.use('/chat', chatRoutes);
+
 // Route pour Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
@@ -95,3 +101,8 @@ app.use((req, res) => {
 server.listen(PORT, () => {
     console.log(`Serveur démarré sur http://localhost:${PORT}`);
 });
+
+// Routes
+import userRoutes from './routes/userRoutes.js';
+
+app.use('/users', userRoutes);
