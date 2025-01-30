@@ -3,7 +3,10 @@ import { DataTypes } from 'sequelize';
 import bcrypt from 'bcrypt';
 
 
-export const User = sequelize.define('Utilisateur', {
+export const User = sequelize.define(
+  'Utilisateur', 
+  //derf model
+  {
     idUtilisateur: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -40,11 +43,8 @@ export const User = sequelize.define('Utilisateur', {
       type: DataTypes.STRING(10), // Correspond au type VARCHAR(50)
       allowNull: true, // Peut être NULL
     },
-    role: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-    },
   },
+  //options
   {
     hooks: {
       beforeCreate: async (user) => {
@@ -59,10 +59,8 @@ export const User = sequelize.define('Utilisateur', {
           user.password = await bcrypt.hash(user.password, salt);
         }
       }
-    }
-  },
-   {
+    },
     tableName: 'utilisateur', // Nom exact de la table dans la BDD
     schema: 'Utilisateurs', // Nom du schéma de la table
     timestamps: false, // Désactive les colonnes `createdAt` et `updatedAt` par défaut
-});
+  });

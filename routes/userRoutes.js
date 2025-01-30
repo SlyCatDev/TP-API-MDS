@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { User } from '../models/User.js';
-// import Role  from '../models/Role.js';
+// import { Role } from '../models/role.js';
 
 const router = Router();
 
@@ -32,14 +32,14 @@ const router = Router();
 router.get('/', async (req, res) => {
   try {
     const utilisateurs = await User.findAll({
-      include: [
-        {
-          model: Role,
-          as: 'role',
-          attributes: ['nom'], // Récupérer uniquement le nom du rôle
-        },
-      ],
-      attributes: { exclude: ['password'] }, // Ne pas envoyer le mot de passe
+      // include: [
+      //   {
+      //     model: Role,
+      //     as: 'role',
+      //     attributes: ['nom'], // Récupérer uniquement le nom du rôle
+      //   },
+      // ],
+      // attributes: { exclude: ['password'] }, // Ne pas envoyer le mot de passe
     });
     res.json(utilisateurs);
   } catch (err) {
