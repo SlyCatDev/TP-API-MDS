@@ -8,7 +8,7 @@ import chatRoutes from './routes/chatRoutes.js';
 import { initializeChat } from './services/chatService.js';
 import bodyParser from 'body-parser';
 // import swaggerUi from 'swagger-ui-express';
-import swaggerJsdoc from 'swagger-jsdoc';
+// import swaggerJsdoc from 'swagger-jsdoc';
 import sequelize from './config/sequelize.js';
 
 import userRoutes from './routes/userRoutes.js';
@@ -35,24 +35,24 @@ const io = new Server(server, {
 });
 
 // Configuration de swagger-jsdoc
-const swaggerOptions = {
-    definition: {
-      openapi: '3.0.0',
-      info: {
-        title: 'Documentation API',
-        version: '1.0.0',
-        description: 'Une API REST avec Express et Swagger',
-      },
-      servers: [
-        {
-          url: 'http://localhost:8080',
-          description: 'serveur de developpement',
-        },
-      ],
-    },
-    apis: ['./routes/*.js'], // Chemin des fichiers contenant des commentaires Swagger
-  };
-  const swaggerSpec = swaggerJsdoc(swaggerOptions);
+// const swaggerOptions = {
+//     definition: {
+//       openapi: '3.0.0',
+//       info: {
+//         title: 'Documentation API',
+//         version: '1.0.0',
+//         description: 'Une API REST avec Express et Swagger',
+//       },
+//       servers: [
+//         {
+//           url: 'http://localhost:8080',
+//           description: 'serveur de developpement',
+//         },
+//       ],
+//     },
+//     apis: ['./routes/*.js'], // Chemin des fichiers contenant des commentaires Swagger
+//   };
+//   const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
 // Initialize service chat
 initializeChat(io);
