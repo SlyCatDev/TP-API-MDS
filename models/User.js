@@ -1,12 +1,9 @@
-import { sequelize } from '../config/sequelize.js';
+import sequelize from '../config/sequelize.js';
 import { DataTypes } from 'sequelize';
-import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 
-dotenv.config();
 
-
-const User = sequelize.define('Utilisateur', {
+export const User = sequelize.define('Utilisateur', {
     idUtilisateur: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -43,6 +40,10 @@ const User = sequelize.define('Utilisateur', {
       type: DataTypes.STRING(10), // Correspond au type VARCHAR(50)
       allowNull: true, // Peut être NULL
     },
+    role: {
+      type: DataTypes.STRING(50),
+      allowNull: false,
+    },
   },
   {
     hooks: {
@@ -62,7 +63,6 @@ const User = sequelize.define('Utilisateur', {
   },
    {
     tableName: 'utilisateur', // Nom exact de la table dans la BDD
+    schema: 'Utilisateurs', // Nom du schéma de la table
     timestamps: false, // Désactive les colonnes `createdAt` et `updatedAt` par défaut
 });
-  
-module.exports = User;
