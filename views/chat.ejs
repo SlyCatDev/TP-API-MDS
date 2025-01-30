@@ -1,42 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %></title>
-    <link rel="stylesheet" href="/css/chat.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><%= title %></title>
+<link rel="stylesheet" href="/css/chat.css">
 </head>
 <body>
-
-    <%- include('partials/header') %>
-        
-    <main>
-        <ul id="messages"></ul>
-            <form id="messageForm" action="">
-                <input id="messageInput" type="text" autocomplete="off" placeholder="Écrivez votre message ou #dab montant"/>
-                <button type="submit">Envoyer</button>
-                <button id="toggle-btn">Disconnect</button>
-        </form>
-    </main>
-
-    <script src="/socket.io/socket.io.js"></script>
+<%- include('partials/header') %>
+<main>
+<ul id="messages"></ul>
+<form id="messageForm" action="">
+<input id="messageInput" type="text" autocomplete="off" placeholder="Écrivez votre message ou #dab montant"/>
+<button type="submit">Envoyer</button>
+<button id="toggle-btn">Disconnect</button>
+</form>
+</main>
+<script src="/socket.io/socket.io.js"></script>
 <script>
   const socket = io();
-
   let username = '';
-
   // Demander le pseudo au chargement de la page
   while (!username.trim()) {
     username = prompt('Veuillez entrer votre pseudo :');
   }
+ 
   const form = document.getElementById('messageForm');
   const input = document.getElementById('messageInput');
   const messages = document.getElementById('messages');
   const toggleButton = document.getElementById('toggle-btn');
-
   // Envoyer l'événement de connexion avec le pseudo
   socket.emit('user connected', username);
-
   // Recevoir l'historique des messages
   socket.on('message history', (history) => {
     messages.innerHTML = '';
@@ -44,53 +38,27 @@
       appendMessage(msg);
     });
   });
-
   // Écouter les événements de connexion et déconnexion
   socket.on('user connected', (msg) => {
     appendSystemMessage(msg, 'connection-message');
   });
-
   socket.on('user disconnected', (msg) => {
     appendSystemMessage(msg, 'disconnection-message');
   });
-
   // Recevoir un nouveau message
   socket.on('message', (msg) => {
     appendMessage(msg);
   });
-
-  form.addEventListener('submit', async (e) => {
+ 
+  form.addEventListener('submit', (e) => {
     e.preventDefault();
     const text = input.value.trim();
     if (text) {
-      // Vérifier si c'est une commande DAB
-      if (text.startsWith('#dab ')) {
-        const match = text.match(/#dab (\d+)€?/);
-        if (match) {
-          const montant = match[1];
-          try {
-            // Retrait du paramètre devise de l'URL
-            const response = await fetch(`/dab/smallest/${montant}`);
-            const data = await response.json();
-              socket.emit('message', { 
-                text: `Coupures pour ${montant}€: ${data.smallest}`,
-                username: 'DAB-Bot'
-              });
-          } catch (error) {
-            socket.emit('message', { 
-              text: "Erreur lors du calcul des coupures",
-              username: 'DAB-Bot'
-            });
-          }
-        }
-      } else {
         socket.emit('message', { text, username });
+        input.value = '';
       }
-      input.value = '';
-    }
   });
 
-  
   toggleButton.addEventListener('click', (e) => {
     e.preventDefault();
     if (socket.connected) {
@@ -101,15 +69,15 @@
       socket.connect();
     }
   });
-
+ 
   // Ajouter un message à la liste
   function appendMessage(msg) {
     const item = document.createElement('li');
     item.textContent = `${msg.username}: ${msg.text}`;
     messages.appendChild(item);
     window.scrollTo(0, document.body.scrollHeight);
-    }
-
+  }
+ 
   // Ajouter un message système (connexion/déconnexion)
   function appendSystemMessage(msg, type) {
     const item = document.createElement('li');
@@ -117,7 +85,7 @@
     item.classList.add('system-message', type);
     messages.appendChild(item);
     window.scrollTo(0, document.body.scrollHeight);
-    }
+  }
 </script>
 </body>
 </html>
