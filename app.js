@@ -27,7 +27,7 @@ sequelize.authenticate()
 
 
 const app = express();
-const PORT = 3000;
+const PORT = 8080;
 
 const server = createServer(app);
 const io = new Server(server, {
@@ -45,7 +45,7 @@ const swaggerOptions = {
       },
       servers: [
         {
-          url: 'http://localhost:3000',
+          url: 'http://localhost:8080',
           description: 'serveur de developpement',
         },
       ],
