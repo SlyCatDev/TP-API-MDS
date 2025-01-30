@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import utilisateur from '../models/utilisateur';
+import { User } from '../models/User.js';
+// import Role  from '../models/Role.js';
 
 const router = Router();
 
@@ -12,25 +13,34 @@ const router = Router();
 
 /**
  * @swagger
- * /utilisateurs:
- *   get:
- *     summary: Récupérer tous les utilisateurs
- *     tags: [Utilisateurs]
- *     responses:
- *       200:
- *         description: Liste des utilisateurs
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Utilisateur'
- *       500:
- *         description: Erreur serveur
+ * /users:
+ *  get:
+ *   summary: Récupérer tous les utilisateurs
+ *   tags: [users]
+ *   responses:
+ *    200:
+ *    description: Utilisateurs trouvés
+ *    content:
+ *      application/json:
+ *       schema:
+ *        type: array
+ * items:
+ * $ref: '#/components/schemas/Utilisateur'
+ * 500:
+ * description: Erreur serveur
  */
-router.get('/utilisateurs', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    const utilisateurs = await Utilisateur.findAll();
+    const utilisateurs = await User.findAll({
+      include: [
+        {
+          model: Role,
+          as: 'role',
+          attributes: ['nom'], // Récupérer uniquement le nom du rôle
+        },
+      ],
+      attributes: { exclude: ['password'] }, // Ne pas envoyer le mot de passe
+    });
     res.json(utilisateurs);
   } catch (err) {
     console.error(err);
@@ -40,10 +50,10 @@ router.get('/utilisateurs', async (req, res) => {
 
 /**
  * @swagger
- * /utilisateurs/{id}:
+ * /users/{id}:
  *   get:
  *     summary: Récupérer un utilisateur par son ID
- *     tags: [Utilisateurs]
+ *     tags: [users]
  *     parameters:
  *       - in: path
  *         name: id
@@ -63,9 +73,11 @@ router.get('/utilisateurs', async (req, res) => {
  *       500:
  *         description: Erreur serveur
  */
-router.get('/utilisateurs/:id', async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
-    const utilisateur = await Utilisateur.findByPk(req.params.id);
+    const utilisateur = await User.findByPk(req.params.id, {
+      attributes: { exclude: ['password'] },
+    });
     if (!utilisateur) {
       return res.status(404).send('Utilisateur non trouvé');
     }
@@ -78,10 +90,10 @@ router.get('/utilisateurs/:id', async (req, res) => {
 
 /**
  * @swagger
- * /utilisateurs:
+ * /users:
  *   post:
  *     summary: Créer un nouvel utilisateur
- *     tags: [Utilisateurs]
+ *     tags: [users]
  *     requestBody:
  *       required: true
  *       content:
@@ -94,9 +106,15 @@ router.get('/utilisateurs/:id', async (req, res) => {
  *       500:
  *         description: Erreur serveur
  */
-router.post('/utilisateurs', async (req, res) => {
+router.post('/', async (req, res) => {
+  const { nom, prenom, adresse_mail, password } = req.body;
+
+  if (!nom || !prenom || !adresse_mail || !password) {
+    return res.status(400).json({ error: 'Tous les champs obligatoires doivent être remplis' });
+  }
+  
   try {
-    const utilisateur = await Utilisateur.create(req.body);
+    const utilisateur = await User.create(req.body);
     res.status(201).json(utilisateur);
   } catch (err) {
     console.error(err);
@@ -106,10 +124,10 @@ router.post('/utilisateurs', async (req, res) => {
 
 /**
  * @swagger
- * /utilisateurs/{id}:
+ * /users/{id}:
  *   put:
  *     summary: Mettre à jour un utilisateur
- *     tags: [Utilisateurs]
+ *     tags: [users]
  *     parameters:
  *       - in: path
  *         name: id
@@ -129,8 +147,13 @@ router.post('/utilisateurs', async (req, res) => {
  *       500:
  *         description: Erreur serveur
  */
-router.put('/utilisateurs/:id', async (req, res) => {
+router.put('/:id', async (req, res) => {
   try {
+    const utilisateur = await User.findByPk(req.params.id);
+    if (!utilisateur) {
+      return res.status(404).json({ error: 'Utilisateur non trouvé' });
+    }
+
     await Utilisateur.update(req.body, {
       where: { id: req.params.id },
     });
@@ -143,10 +166,10 @@ router.put('/utilisateurs/:id', async (req, res) => {
 
 /**
  * @swagger
- * /utilisateurs/{id}:
+ * /users/{id}:
  *   delete:
  *     summary: Supprimer un utilisateur
- *     tags: [Utilisateurs]
+ *     tags: [users]
  *     parameters:
  *       - in: path
  *         name: id
@@ -160,9 +183,9 @@ router.put('/utilisateurs/:id', async (req, res) => {
  *       500:
  *         description: Erreur serveur
  */
-router.delete('/utilisateurs/:id', async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
-    await Utilisateur.destroy({
+    await User.destroy({
       where: { id: req.params.id },
     });
     res.json({ message: 'Utilisateur supprimé' });
