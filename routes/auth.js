@@ -1,47 +1,13 @@
 // import bcrypt from 'bcrypt';
-import { User } from '../models/user';
+// import { User } from '../models/user';
 import jwt from 'jsonwebtoken';
-// import dotenv from 'dotenv';
+import dotenv from 'dotenv';
 
-/* dotenv.config();
+dotenv.config();
 
 const router = Router();
 
-const SECRET_KEY = process.env.JWT_SECRET;
-*/
 
-/**
- * @swagger
- * /login:
- *   post:
- *     summary: Authentifier un utilisateur
- *     tags: [Pages]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               username:
- *                 type: string
- *                 description: Nom d'utilisateur
- *               password:
- *                 type: string
- *                 description: Mot de passe
- *             required:
- *               - username
- *               - password
- *     responses:
- *       200:
- *         description: Connexion réussie
- *       400:
- *         description: Paramètres manquants ou invalides
- *       401:
- *         description: Identifiants incorrects
- *       500:
- *         description: Erreur serveur
- */
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
