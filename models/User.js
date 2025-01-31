@@ -1,6 +1,5 @@
 import sequelize from '../config/sequelize.js';
 import { DataTypes } from 'sequelize';
-// import bcrypt from 'bcrypt';
 
 
 export const User = sequelize.define(
@@ -11,7 +10,6 @@ export const User = sequelize.define(
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true, // La colonne est en auto-incrément
-      allowNull: false, // Ne peut pas être NULL
     },
     nom: {
       type: DataTypes.STRING(100), // Correspond au type VARCHAR(100)
@@ -37,7 +35,7 @@ export const User = sequelize.define(
     },
     password: {
       type: DataTypes.STRING(50), // Correspond au type VARCHAR(50)
-      allowNull: true, // Peut être NULL
+      allowNull: false, // Ne Peut pas être NULL
     },
     plaque_immatriculation: {
       type: DataTypes.STRING(10), // Correspond au type VARCHAR(50)
