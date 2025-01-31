@@ -2,7 +2,8 @@ import sequelize from '../config/sequelize.js';
 import { DataTypes } from 'sequelize';
 import { User } from '../models/User.js';
 
-export const Role = sequelize.define('Role', {
+export const Role = sequelize.define('Role', 
+    {
     idRole: {
         type: DataTypes.INTEGER,
         primaryKey: true,

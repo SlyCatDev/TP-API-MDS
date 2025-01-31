@@ -33,7 +33,7 @@ export function initializeChat(io) {
         });
  
         socket.on('message', (msg) => {
-            if (!msg || !msg.text) return; // Protection contre les messages invalides
+            if (!msg || !msg.text) return;
             const now = new Date();
             let texteMessage = filtrerMessage(msg.text);
  

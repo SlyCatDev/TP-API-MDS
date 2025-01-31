@@ -2,44 +2,42 @@ import sequelize from '../config/sequelize.js';
 import { DataTypes } from 'sequelize';
 
 
-export const User = sequelize.define(
-  'Utilisateur', 
-  //derf model
+export const User = sequelize.define('Utilisateur', 
   {
     idUtilisateur: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true, // La colonne est en auto-incrément
+      autoIncrement: true,
     },
     nom: {
-      type: DataTypes.STRING(100), // Correspond au type VARCHAR(100)
-      allowNull: true, // Peut être NULL
+      type: DataTypes.STRING(100),
+      allowNull: true, 
     },
     prenom: {
-      type: DataTypes.STRING(50), // Correspond au type VARCHAR(50)
-      allowNull: true, // Peut être NULL
+      type: DataTypes.STRING(50),
+      allowNull: true,
     },
     adresse_mail: {
-      type: DataTypes.STRING(50), // Correspond au type VARCHAR(50)
-      allowNull: false, // Ne peut pas être NULL
+      type: DataTypes.STRING(50),
+      allowNull: false, 
       validate: {
-        isEmail: true, // Validation d'email intégrée
+        isEmail: true, 
       },
     },
     telephone: {
-      type: DataTypes.INTEGER, // Correspond au type INT
-      allowNull: true, // Peut être NULL
+      type: DataTypes.INTEGER,
+      allowNull: true, 
       validate: {
-        isNumeric: true, // Vérifie que la valeur est numérique
+        isNumeric: true, 
       },
     },
     password: {
-      type: DataTypes.STRING(50), // Correspond au type VARCHAR(50)
-      allowNull: false, // Ne Peut pas être NULL
+      type: DataTypes.STRING(50), 
+      allowNull: false,
     },
     plaque_immatriculation: {
-      type: DataTypes.STRING(10), // Correspond au type VARCHAR(50)
-      allowNull: true, // Peut être NULL
+      type: DataTypes.STRING(10), 
+      allowNull: true, 
     },
   },
   //options
