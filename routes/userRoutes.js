@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { User } from '../models/User.js';
-import { authenticateToken } from '../middleware/auth.js';
+import { authenticateJWT } from '../middleware/auth.js';
 // import bcrypt from 'bcrypt';
 // import { Role } from '../models/Role.js';
 
