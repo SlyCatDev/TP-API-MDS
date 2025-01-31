@@ -45,8 +45,8 @@ const swaggerOptions = {
       },
       servers: [
         {
-          url: 'http://localhost:8080',
-          description: 'serveur de developpement',
+          url: 'http://sylvain.raveneau.angers.mds-project.fr:8080',
+          description: 'Serveur de developpement',
         },
       ],
     },
