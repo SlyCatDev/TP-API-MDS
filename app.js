@@ -10,8 +10,8 @@ import bodyParser from 'body-parser';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import sequelize from './config/sequelize.js';
-
 import userRoutes from './routes/userRoutes.js';
+import loginRoutes from './routes/loginRoutes.js'
 
 
 // Synchronisation de la base de données avec Sequelize
@@ -93,6 +93,9 @@ app.use('/dab', dabRoutes);
 app.use('/chat', chatRoutes);
 
 app.use('/users', userRoutes);
+
+app.use('/auth', loginRoutes);
+
 
 // Route pour Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));

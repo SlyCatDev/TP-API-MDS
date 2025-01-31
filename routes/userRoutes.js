@@ -65,7 +65,7 @@ const router = Router();
  *       500:
  *         description: Erreur serveur
  */
-router.get('/', authenticateJWT, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const utilisateurs = await User.findAll({
       // include: [

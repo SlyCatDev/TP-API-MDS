@@ -7,11 +7,11 @@ dotenv.config();
 const router = Router();
 
 
-router.post('/auth', authenticateJWT, async (req, res) => {
+router.post('/', authenticateJWT, async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    const user = await User.findOne({ where: { username } });
+    const user = await User.findOne({ where: { username, password } });
 
     if (!user) {
       return res.status(400).json({ message: 'Utilisateur non trouvé' });
