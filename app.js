@@ -84,7 +84,8 @@ app.use((req, res, next) => {
     next();
 });
 
-//synchronizeDatabase();
+// Middleware pour logger les requêtes JSON
+app.use(express.json());
 
 // Utilisation des routes
 app.use('/', routes);

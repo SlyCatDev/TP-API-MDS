@@ -73,10 +73,35 @@
   // Ajouter un message à la liste
   function appendMessage(msg) {
     const item = document.createElement('li');
-    item.textContent = `${msg.username}: ${msg.text}`;
+    item.classList.add('message-item');
+
+    // Création du pseudo avec mise en gras et couleur rouge si utilisateur connecté
+    const usernameSpan = document.createElement('span');
+    usernameSpan.textContent = msg.username;
+    usernameSpan.classList.add('username');
+    if (msg.username === username) {
+        usernameSpan.classList.add('current-user'); // Rouge pour l'utilisateur connecté
+    }
+
+    // Création du message
+    const messageSpan = document.createElement('span');
+    messageSpan.textContent = `: ${msg.text}`;
+    messageSpan.classList.add('message-text');
+
+    // Création de la date/heure alignée à droite
+    const timeSpan = document.createElement('span');
+    const timestamp = new Date().toLocaleTimeString(); // Heure actuelle
+    timeSpan.textContent = timestamp;
+    timeSpan.classList.add('message-time');
+
+    // Ajout des éléments dans le message
+    item.appendChild(usernameSpan);
+    item.appendChild(messageSpan);
+    item.appendChild(timeSpan);
+
     messages.appendChild(item);
     window.scrollTo(0, document.body.scrollHeight);
-  }
+}
  
   // Ajouter un message système (connexion/déconnexion)
   function appendSystemMessage(msg, type) {

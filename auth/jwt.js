@@ -27,7 +27,7 @@ export function verifyToken(token) {
     }
 
     try {
-        return jwt.verify(token, JWT_SECRET, {
+        return jwt.verify(token, process.env.JWT_SECRET, {
             algorithms: ['HS256']
         });
     } catch (error) {

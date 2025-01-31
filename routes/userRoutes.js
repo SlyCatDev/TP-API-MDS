@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { User } from '../models/User.js';
+// import bcrypt from 'bcrypt';
 // import { Role } from '../models/role.js';
 
 const router = Router();
@@ -14,20 +15,20 @@ const router = Router();
 /**
  * @swagger
  * /users:
- *  get:
- *   summary: Récupérer tous les utilisateurs
- *   tags: [users]
- *   responses:
- *    200:
- *    description: Utilisateurs trouvés
- *    content:
- *      application/json:
- *       schema:
- *        type: array
- * items:
- * $ref: '#/components/schemas/Utilisateur'
- * 500:
- * description: Erreur serveur
+ *   get:
+ *     summary: Récupérer tous les utilisateurs
+ *     tags: [Utilisateurs]
+ *     responses:
+ *       200:
+ *         description: Utilisateurs trouvés
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Utilisateur'
+ *       500:
+ *         description: Erreur serveur
  */
 router.get('/', async (req, res) => {
   try {
@@ -53,7 +54,7 @@ router.get('/', async (req, res) => {
  * /users/{id}:
  *   get:
  *     summary: Récupérer un utilisateur par son ID
- *     tags: [users]
+ *     tags: [Utilisateurs]
  *     parameters:
  *       - in: path
  *         name: id
@@ -88,33 +89,32 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-/**
- * @swagger
- * /users:
- *   post:
- *     summary: Créer un nouvel utilisateur
- *     tags: [users]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Utilisateur'
- *     responses:
- *       201:
- *         description: Utilisateur créé
- *       500:
- *         description: Erreur serveur
- */
+
+
 router.post('/', async (req, res) => {
   const { nom, prenom, adresse_mail, password } = req.body;
 
   if (!nom || !prenom || !adresse_mail || !password) {
     return res.status(400).json({ error: 'Tous les champs obligatoires doivent être remplis' });
   }
-  
+
   try {
-    const utilisateur = await User.create(req.body);
+    // Vérifier si l'utilisateur existe déjà
+    const utilisateurExistant = await User.findOne({ where: { adresse_mail } });
+    if (utilisateurExistant) {
+      return res.status(400).json({ error: 'Cet email est déjà utilisé' });
+    }
+
+    // Hash du mot de passe
+    // const hashedPassword = await bcrypt.hash(password, 10);
+
+    const utilisateur = await User.create({
+      nom,
+      prenom,
+      adresse_mail,
+      password: password,
+    });
+
     res.status(201).json(utilisateur);
   } catch (err) {
     console.error(err);
@@ -154,10 +154,11 @@ router.put('/:id', async (req, res) => {
       return res.status(404).json({ error: 'Utilisateur non trouvé' });
     }
 
-    await Utilisateur.update(req.body, {
+    await User.update(req.body, {
       where: { id: req.params.id },
     });
-    res.json({ message: 'Utilisateur mis à jour' });
+    
+    res.json(utilisateur);
   } catch (err) {
     console.error(err);
     res.status(500).send('Erreur serveur');
