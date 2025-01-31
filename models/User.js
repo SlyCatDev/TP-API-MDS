@@ -1,6 +1,6 @@
 import sequelize from '../config/sequelize.js';
 import { DataTypes } from 'sequelize';
-import bcrypt from 'bcrypt';
+// import bcrypt from 'bcrypt';
 
 
 export const User = sequelize.define(
@@ -46,20 +46,6 @@ export const User = sequelize.define(
   },
   //options
   {
-    hooks: {
-      beforeCreate: async (user) => {
-        if (user.password) {
-          const salt = await bcrypt.genSalt(10);
-          user.password = await bcrypt.hash(user.password, salt);
-        }
-      },
-      beforeUpdate: async (user) => {
-        if (user.changed('password')) {
-          const salt = await bcrypt.genSalt(10);
-          user.password = await bcrypt.hash(user.password, salt);
-        }
-      }
-    },
     tableName: 'utilisateur', // Nom exact de la table dans la BDD
     schema: 'Utilisateurs', // Nom du schéma de la table
     timestamps: false, // Désactive les colonnes `createdAt` et `updatedAt` par défaut
