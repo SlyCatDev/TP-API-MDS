@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { User } from '../models/User.js';
 // import bcrypt from 'bcrypt';
-// import { Role } from '../models/role.js';
+// import { Role } from '../models/Role.js';
 
 const router = Router();
 
@@ -10,6 +10,40 @@ const router = Router();
  * tags:
  *   name: Utilisateurs
  *   description: Gestion des utilisateurs
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Utilisateur:
+ *       type: object
+ *       properties:
+ *         idUtilisateur:
+ *           type: integer
+ *           description: Identifiant unique de l'utilisateur
+ *         nom:
+ *           type: string
+ *           description: Nom de l'utilisateur
+ *         prenom:
+ *           type: string
+ *           description: Prénom de l'utilisateur
+ *         adresse_mail:
+ *           type: string
+ *           format: email
+ *           description: Adresse email de l'utilisateur
+ *         telephone:
+ *           type: string
+ *           description: Numéro de téléphone
+ *           nullable: true
+ *         plaque_immatriculation:
+ *           type: string
+ *           description: Plaque d'immatriculation
+ *           nullable: true
+ *       required:
+ *         - nom
+ *         - prenom
+ *         - adresse_mail
  */
 
 /**
@@ -90,12 +124,87 @@ router.get('/:id', async (req, res) => {
 });
 
 
+/**
+ * @swagger
+ * /users:
+ *   post:
+ *     summary: Créer un nouvel utilisateur
+ *     tags: [Utilisateurs]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - nom
+ *               - prenom
+ *               - adresse_mail
+ *               - password
+ *             properties:
+ *               nom:
+ *                 type: string
+ *                 example: Dupont
+ *               prenom:
+ *                 type: string
+ *                 example: Jean
+ *               adresse_mail:
+ *                 type: string
+ *                 format: email
+ *                 example: jean.dupont@example.com
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 example: motdepasse123
+ *     responses:
+ *       201:
+ *         description: Utilisateur créé avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 nom:
+ *                   type: string
+ *                   example: Dupont
+ *                 prenom:
+ *                   type: string
+ *                   example: Jean
+ *                 adresse_mail:
+ *                   type: string
+ *                   example: jean.dupont@example.com
+ *       400:
+ *         description: Données invalides ou email déjà utilisé
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Cet email est déjà utilisé
+ *       500:
+ *         description: Erreur serveur
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Erreur serveur
+ */
 
 router.post('/', async (req, res) => {
   const { nom, prenom, adresse_mail, password } = req.body;
 
   if (!nom || !prenom || !adresse_mail || !password) {
-    return res.status(400).json({ error: 'Tous les champs obligatoires doivent être remplis' });
+    return res
+      .status(400)
+      .json({ error: 'Tous les champs obligatoires doivent être remplis' });
   }
 
   try {
@@ -127,7 +236,7 @@ router.post('/', async (req, res) => {
  * /users/{id}:
  *   put:
  *     summary: Mettre à jour un utilisateur
- *     tags: [users]
+ *     tags: [Utilisateurs]
  *     parameters:
  *       - in: path
  *         name: id
@@ -155,10 +264,10 @@ router.put('/:id', async (req, res) => {
     }
 
     await User.update(req.body, {
-      where: { id: req.params.id },
+      where: { idUtilisateur: req.params.id },
     });
-    
-    res.json(utilisateur);
+
+    res.json({ message: 'Utilisateur a été modifié' });
   } catch (err) {
     console.error(err);
     res.status(500).send('Erreur serveur');
@@ -170,7 +279,7 @@ router.put('/:id', async (req, res) => {
  * /users/{id}:
  *   delete:
  *     summary: Supprimer un utilisateur
- *     tags: [users]
+ *     tags: [Utilisateurs]
  *     parameters:
  *       - in: path
  *         name: id
@@ -186,13 +295,24 @@ router.put('/:id', async (req, res) => {
  */
 router.delete('/:id', async (req, res) => {
   try {
-    await User.destroy({
-      where: { id: req.params.id },
-    });
-    res.json({ message: 'Utilisateur supprimé' });
+    const userId = req.params.id;
+
+    const user = await User.findByPk(userId);
+
+    // // Ensuite supprimer l'utilisateur
+    // const deletedRows = await User.destroy({
+    //   where: { idUtilisateur: userId }
+    // });
+    await user.destroy();
+
+    // if (deletedRows === 0) {
+    //   return res.status(404).json({ message: 'Utilisateur non trouvé' });
+    // }
+
+    res.status(200).json({ message: 'Utilisateur supprimé' });
   } catch (err) {
-    console.error(err);
-    res.status(500).send('Erreur serveur');
+    console.error('Erreur lors de la suppression:', err);
+    res.status(500).json({ erreur: 'Erreur serveur', details: err.message });
   }
 });
 
