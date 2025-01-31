@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-//import { JWT_SECRET } from '../auth/jwt.js';
 
 // Charger les variables d'environnement
 dotenv.config();
